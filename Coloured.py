@@ -3,10 +3,9 @@ import hashlib
 import json
 from colorama import Fore, Style, init
 
-# Initialize colorama
-init(autoreset=True)
+init(autoreset=True)   # initialize colorama
 
-# Function to compute the SHA-256 hash of a file
+#function to compute the SHA-256 hash of a file
 def compute_hash(file_path):
     sha256 = hashlib.sha256()
     try:
@@ -17,7 +16,7 @@ def compute_hash(file_path):
     except FileNotFoundError:
         return None
 
-# Function to generate file hashes for all files in a directory
+#function to generate file hashes for all files in a directory
 def generate_hashes(directory):
     hashes = {}
     for root, _, files in os.walk(directory):
@@ -26,12 +25,12 @@ def generate_hashes(directory):
             hashes[file_path] = compute_hash(file_path)
     return hashes
 
-# Function to save hashes to a JSON file
+#function to save hashes to a JSON file
 def save_hashes(hashes, hash_file="hashes.json"):
     with open(hash_file, "w") as f:
         json.dump(hashes, f, indent=4)
 
-# Function to load stored hashes from a JSON file
+#function to load stored hashes from a JSON file
 def load_hashes(hash_file="hashes.json"):
     try:
         with open(hash_file, "r") as f:
@@ -39,7 +38,7 @@ def load_hashes(hash_file="hashes.json"):
     except FileNotFoundError:
         return {}
 
-# Function to check integrity
+#function to check integrity
 def check_integrity(directory, hash_file="hashes.json"):
     stored_hashes = load_hashes(hash_file)
     current_hashes = generate_hashes(directory)
@@ -48,21 +47,21 @@ def check_integrity(directory, hash_file="hashes.json"):
     deleted_files = []
     new_files = []
 
-    # Check for modified and deleted files
+    #check for modified and deleted files
     for file, old_hash in stored_hashes.items():
         if file not in current_hashes:
             deleted_files.append(file)
         elif current_hashes[file] != old_hash:
             modified_files.append(file)
 
-    # Check for new files
+    #check for new files
     for file in current_hashes:
         if file not in stored_hashes:
             new_files.append(file)
 
     return modified_files, deleted_files, new_files
 
-# Main function
+#main function
 def main():
     directory = input("Enter directory path to monitor: ")
 
